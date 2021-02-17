@@ -4,7 +4,7 @@ import 'package:chopper/chopper.dart';
 
 class MobileDataInterceptor implements RequestInterceptor {
   @override
-  FutureOr<Request> onRequest(Request request) async {
+  Future<Request> onRequest(Request request) async {
     final connectivityResult = await Connectivity().checkConnectivity();
     final isMobile = (connectivityResult == ConnectivityResult.mobile);
     final isLargeFile =
