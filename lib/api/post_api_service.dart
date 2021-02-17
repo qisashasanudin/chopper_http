@@ -1,4 +1,5 @@
 import 'package:chopper/chopper.dart';
+import 'package:chopper_http/api/mobile_data_interceptor.dart';
 
 part 'post_api_service.chopper.dart';
 
@@ -29,6 +30,24 @@ abstract class PostAPIService extends ChopperService {
         _$PostAPIService(),
       ],
       converter: JsonConverter(),
+      interceptors: [
+        HeadersInterceptor({'Cache-Control': 'no-cache'}),
+        CurlInterceptor(),
+        HttpLoggingInterceptor(),
+        MobileDataInterceptor(),
+        (Request request) async {
+          if (request.method == HttpMethod.Post) {
+            chopperLogger.info('Performed a POST request');
+          }
+          return request;
+        },
+        (Response response) async {
+          if (response.statusCode == 404) {
+            chopperLogger.severe('404 NOT FOUND');
+          }
+          return response;
+        },
+      ],
     );
     return _$PostAPIService(client);
   }
